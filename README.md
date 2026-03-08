@@ -89,6 +89,20 @@ flowchart LR
 - `requirements.txt` – Python dependencies for backend, dashboard, and scripts.
 - `.env.example` – template for environment variables.
 
+### Environment variables
+
+| Variable | Used by | Role |
+|----------|--------|------|
+| `SUPABASE_URL` | Backend, load script | Supabase project URL (e.g. `https://xxx.supabase.co`). Required for DB connection. |
+| `SUPABASE_KEY` | Backend, load script | Supabase anon or service role key. Use service role for load script and to avoid RLS issues. |
+| `OPENAI_API_KEY` | Backend | OpenAI API key; used for AI summaries when `OLLAMA_HOST` is not set. |
+| `OLLAMA_HOST` | Backend | If set, use Ollama instead of OpenAI (e.g. `https://ollama.com` for Cloud, `http://localhost:11434` for local). |
+| `OLLAMA_API_KEY` | Backend | Required for Ollama Cloud. Omit for local Ollama. |
+| `OLLAMA_MODEL` | Backend | Model name (e.g. `gpt-oss:20b-cloud`, `llama3.2`). |
+| `BACKEND_BASE_URL` | Dashboard | Base URL of the FastAPI backend (e.g. `http://localhost:8000`). Dashboard calls this for data and AI summary. |
+
+Copy `.env.example` to `.env` and fill in values. No external data source is required; data is synthetic and produced by `scripts/generate_synthetic_data.py`, then loaded with `scripts/load_to_supabase.py`.
+
 ## Getting Started
 
 1. Create and activate a virtual environment (recommended):
