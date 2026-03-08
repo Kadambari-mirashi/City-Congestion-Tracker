@@ -139,7 +139,7 @@ flowchart LR
 
 ## Testing the API
 
-**2–3 test executions** (copy-paste commands and expected results) are in **[docs/tests.md](docs/tests.md)**.
+**Test executions** (API + UI) and a **demonstration** that uses them are in **[docs/tests.md](docs/tests.md)** — see the *Demonstration* section there for how the tests show the tool working.
 
 With the backend running you can also use:
 
