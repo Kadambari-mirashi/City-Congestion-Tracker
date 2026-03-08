@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+streamlit
+requests
+python-dotenv
+pydantic
+pydantic-settings
+supabase
+openai
+ollama
+pandas
+

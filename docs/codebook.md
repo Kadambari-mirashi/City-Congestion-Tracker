@@ -1,0 +1,27 @@
+# City Congestion Tracker Codebook
+
+## Tables and Fields
+
+### locations
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | integer | Primary key, unique identifier |
+| name | text | Human-readable location name (e.g., "5th Ave & Main") |
+| zone | text | Zone or neighborhood (Downtown, Midtown, Riverside, University District) |
+
+### congestion_readings
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | integer | Primary key |
+| location_id | integer | Foreign key to locations.id |
+| timestamp | timestamptz | When the reading was taken |
+| congestion_level | integer | 0–100 scale (0=free flow, 100=gridlock) |
+| avg_speed_kph | float | Average speed in km/h (nullable) |
+| delay_minutes | float | Delay in minutes (nullable) |
+
+## Generated Data
+
+- **locations.csv**: 10 rows
+- **congestion_readings.csv**: 1680 rows (10 locations × 7 days × 24 hours)

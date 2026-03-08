@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: infra/backend.Dockerfile
+    container_name: city-congestion-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+
+  dashboard:
+    build:
+      context: ..
+      dockerfile: infra/dashboard.Dockerfile
+    container_name: city-congestion-dashboard
+    ports:
+      - "8501:8501"
+    environment:
+      - BACKEND_BASE_URL=http://backend:8000
+
+networks:
+  default:
+    name: city-congestion-network
+

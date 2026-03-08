@@ -1,0 +1,7 @@
+SUPABASE_URL="https://your-supabase-project-url.supabase.co"
+SUPABASE_KEY="your-supabase-anon-or-service-role-key"
+
+OPENAI_API_KEY="sk-your-openai-api-key"
+
+# Base URL where the FastAPI backend is reachable
+BACKEND_BASE_URL="http://localhost:8000"
