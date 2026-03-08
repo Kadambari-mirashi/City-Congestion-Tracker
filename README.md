@@ -77,6 +77,7 @@ flowchart LR
 - `docs/`
   - `codebook.md` – explanation of dataset fields.
   - `api_reference.md` – documentation of API endpoints.
+  - `tests.md` – 2–3 test executions with commands and expected results.
 
 - `infra/`
   - `schema.sql` – Supabase table definitions (run in SQL Editor first).
@@ -138,7 +139,9 @@ flowchart LR
 
 ## Testing the API
 
-With the backend running:
+**2–3 test executions** (copy-paste commands and expected results) are in **[docs/tests.md](docs/tests.md)**.
+
+With the backend running you can also use:
 
 - **Health**: `curl http://localhost:8000/health`
 - **Locations**: `curl "http://localhost:8000/locations/"` or `curl "http://localhost:8000/locations/?zone=Downtown"`
