@@ -42,12 +42,18 @@ jobs:
         env:
           CONNECT_SERVER: ${{ secrets.CONNECT_SERVER }}
           CONNECT_API_KEY: ${{ secrets.CONNECT_API_KEY }}
+          CONNECT_BACKEND_APP_ID: ${{ secrets.CONNECT_BACKEND_APP_ID }}
         run: |
+          EXTRA=""
+          if [ -n "$CONNECT_BACKEND_APP_ID" ]; then
+            EXTRA="--app-id $CONNECT_BACKEND_APP_ID"
+          fi
           rsconnect deploy fastapi . \
             --server "$CONNECT_SERVER" \
             --api-key "$CONNECT_API_KEY" \
             --entrypoint main:app \
-            --title "City Congestion Tracker API"
+            --title "City Congestion Tracker API" \
+            $EXTRA
 
   deploy-dashboard:
     name: Deploy Dashboard (Streamlit)
@@ -74,9 +80,15 @@ jobs:
         env:
           CONNECT_SERVER: ${{ secrets.CONNECT_SERVER }}
           CONNECT_API_KEY: ${{ secrets.CONNECT_API_KEY }}
+          CONNECT_DASHBOARD_APP_ID: ${{ secrets.CONNECT_DASHBOARD_APP_ID }}
         run: |
+          EXTRA=""
+          if [ -n "$CONNECT_DASHBOARD_APP_ID" ]; then
+            EXTRA="--app-id $CONNECT_DASHBOARD_APP_ID"
+          fi
           rsconnect deploy streamlit . \
             --server "$CONNECT_SERVER" \
             --api-key "$CONNECT_API_KEY" \
             --entrypoint app.py \
-            --title "City Congestion Tracker Dashboard"
+            --title "City Congestion Tracker Dashboard" \
+            $EXTRA

@@ -2,6 +2,7 @@
 Lightweight client for calling the FastAPI backend from the Streamlit dashboard.
 """
 
+import json
 import os
 from typing import Any
 
@@ -13,11 +14,24 @@ load_dotenv()
 BACKEND_BASE_URL = os.getenv("BACKEND_BASE_URL", "http://localhost:8000")
 
 
+def _parse_json(response: requests.Response) -> Any:
+    """Parse response as JSON or raise a clear error with status and body snippet."""
+    try:
+        return response.json()
+    except json.JSONDecodeError as e:
+        body = (response.text or "").strip()
+        snippet = body[:200] + ("..." if len(body) > 200 else "") if body else "(empty)"
+        raise RuntimeError(
+            f"Backend returned non-JSON (status={response.status_code}). "
+            f"First 200 chars: {snippet!r}"
+        ) from e
+
+
 def get_health() -> dict[str, Any]:
     """Call the backend /health endpoint."""
     response = requests.get(f"{BACKEND_BASE_URL}/health", timeout=5)
     response.raise_for_status()
-    return response.json()
+    return _parse_json(response)
 
 
 def get_locations(zone: str | None = None) -> list[dict[str, Any]]:
@@ -26,7 +40,7 @@ def get_locations(zone: str | None = None) -> list[dict[str, Any]]:
     params = {} if not zone else {"zone": zone}
     response = requests.get(url, params=params, timeout=10)
     response.raise_for_status()
-    return response.json()
+    return _parse_json(response)
 
 
 def get_congestion_raw(
@@ -44,7 +58,7 @@ def get_congestion_raw(
         params["min_level"] = min_level
     response = requests.get(url, params=params, timeout=30)
     response.raise_for_status()
-    return response.json()
+    return _parse_json(response)
 
 
 def get_ai_summary(
@@ -67,4 +81,5 @@ def get_ai_summary(
     }
     response = requests.post(url, json=payload, timeout=60)
     response.raise_for_status()
-    return response.json()["summary"]
+    data = _parse_json(response)
+    return data.get("summary", "")

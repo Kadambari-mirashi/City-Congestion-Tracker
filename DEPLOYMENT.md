@@ -34,6 +34,15 @@ Add these in **Settings → Secrets and variables → Actions** so the deployed 
 |--------|----------|--------|
 | `BACKEND_BASE_URL` | Yes (after 1st deploy) | Full URL of the deployed backend on Connect (e.g. `https://connect.college.edu/content/1234/`). The dashboard calls this for data and AI summary. |
 
+**Optional: update same app instead of creating new ones**
+
+| Secret | Purpose |
+|--------|--------|
+| `CONNECT_BACKEND_APP_ID` | App ID/GUID of the **backend** content on Connect. If set, future deploys **update** that app instead of creating a new one. |
+| `CONNECT_DASHBOARD_APP_ID` | App ID/GUID of the **dashboard** content on Connect. If set, future deploys **update** that app instead of creating a new one. |
+
+To get an app ID: open the content on Connect, then use the app’s GUID from the URL or the content’s “About” / settings. After adding these secrets, the next workflow run will update the existing apps.
+
 ## How the workflow deploys
 
 1. **Trigger:** Runs on every **push to `main`** and can be run manually via **Actions → Deploy to Posit Connect → Run workflow**.
@@ -68,9 +77,19 @@ Backend is always deployed first so that when the dashboard runs, you can point 
 | Dashboard shows “can’t reach backend” | Set `BACKEND_BASE_URL` to the **exact** URL of the deployed backend app (including `/content/...`), then redeploy the dashboard (rerun workflow or push). |
 | AI summary fails on Connect | Configure either `OPENAI_API_KEY` or `OLLAMA_HOST` + `OLLAMA_API_KEY` (and optionally `OLLAMA_MODEL`). For Ollama Cloud, use `OLLAMA_HOST=https://ollama.com`. |
 | “Module not found” on Connect | Backend and dashboard each use their own `requirements.txt` and are deployed from `backend/` and `dashboard/`; ensure you didn’t remove or rename `main.py` / `app.py` or change the entry points in the workflow. |
+| Dashboard: “Expecting value” / JSONDecodeError | Backend may be returning HTML or an empty body (e.g. wrong URL, proxy, or backend error). Check that `BACKEND_BASE_URL` is the **exact** API URL (e.g. ends with `/content/1234/` and the backend serves JSON at `/locations/`). Open that URL in a browser; you should see JSON, not an HTML page. |
+
+## Why a new app appears on every deploy
+
+By default, each workflow run creates **new** content on Connect because the runner has no record of previously deployed app IDs. To **update the same app** instead:
+
+1. After the first deploy, open each piece of content (backend and dashboard) on Connect and copy its **App ID** (GUID). You can find it in the content URL or in the content’s settings / “About”.
+2. Add GitHub secrets: **`CONNECT_BACKEND_APP_ID`** and **`CONNECT_DASHBOARD_APP_ID`** with those GUIDs.
+3. From the next run onward, the workflow will pass `--app-id` to rsconnect, so it will **replace** the existing apps instead of creating new ones.
 
 ## Summary
 
 - **Backend:** Deployed from `backend/` with `main:app`. Needs Supabase (and optionally OpenAI or Ollama) via secrets.
 - **Dashboard:** Deployed from `dashboard/` with `app.py`. Needs `BACKEND_BASE_URL` set to the live backend URL after the first backend deploy.
 - Add the required and optional secrets above, then run the workflow; after the first backend deploy, set `BACKEND_BASE_URL` and rerun so the dashboard uses the correct API.
+- To avoid new apps on each deploy, set `CONNECT_BACKEND_APP_ID` and `CONNECT_DASHBOARD_APP_ID` to the existing content GUIDs.
