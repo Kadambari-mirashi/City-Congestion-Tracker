@@ -6,11 +6,11 @@ import logging
 
 from fastapi import APIRouter, HTTPException
 
-from ..ai_client import generate_congestion_summary
+from ai_client import generate_congestion_summary
+from schemas import AISummaryRequest, AISummaryResponse
+from supabase_client import get_all_locations, get_congestion_raw
 
 logger = logging.getLogger(__name__)
-from ..schemas import AISummaryRequest, AISummaryResponse
-from ..supabase_client import get_all_locations, get_congestion_raw
 
 
 router = APIRouter(prefix="/ai", tags=["ai"])

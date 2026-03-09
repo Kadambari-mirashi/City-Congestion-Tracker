@@ -5,7 +5,7 @@ Supports OpenAI, Ollama Cloud (OLLAMA_HOST + OLLAMA_API_KEY), or local Ollama.
 
 from typing import Any
 
-from .config import settings
+from config import settings
 
 
 def _format_stats(stats: dict[str, Any]) -> str:

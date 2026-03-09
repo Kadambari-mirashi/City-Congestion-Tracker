@@ -3,7 +3,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import ai_summary, congestion, locations
+from routers import ai_summary, congestion, locations
 
 logging.basicConfig(level=logging.INFO)
 
@@ -39,7 +39,7 @@ def debug_locations_count():
 @app.get("/debug/ai-provider")
 def debug_ai_provider():
     """Temporary debug: which AI provider is configured."""
-    from .config import settings
+    from config import settings
     if settings.ollama_host:
         return {
             "provider": "ollama",

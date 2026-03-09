@@ -7,7 +7,7 @@ from typing import Any
 
 from supabase import create_client, Client
 
-from .config import settings
+from config import settings
 
 logger = logging.getLogger(__name__)
 _client: Client | None = None

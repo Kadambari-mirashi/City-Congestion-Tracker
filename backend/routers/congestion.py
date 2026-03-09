@@ -6,8 +6,8 @@ from typing import Optional
 
 from fastapi import APIRouter, Query
 
-from ..schemas import CongestionReading
-from ..supabase_client import get_congestion_raw
+from schemas import CongestionReading
+from supabase_client import get_congestion_raw
 
 
 router = APIRouter(prefix="/congestion", tags=["congestion"])

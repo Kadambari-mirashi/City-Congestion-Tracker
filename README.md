@@ -167,6 +167,10 @@ Optional `congestion/raw` params: `location_ids=1,2,3` and `min_level=50`.
 
 **If /locations returns empty:** Supabase Row Level Security may be blocking reads. In the Supabase SQL Editor, run the contents of `infra/rls_fix.sql`. Also ensure you use the **service role key** (not anon key) in `SUPABASE_KEY` for full access.
 
+## Deployment
+
+To deploy the **backend** and **dashboard** to a Posit Connect server (e.g. your college’s) using GitHub Actions, see **[DEPLOYMENT.md](DEPLOYMENT.md)**. It explains required GitHub secrets, the deploy order (backend first, then dashboard), and how to set `BACKEND_BASE_URL` after the backend is live.
+
 ## Using Ollama Cloud (for deployment)
 
 To use Ollama Cloud instead of OpenAI (works on Posit Cloud, no local install):

@@ -7,8 +7,8 @@ from typing import Optional
 
 from fastapi import APIRouter, Query
 
-from ..schemas import Location
-from ..supabase_client import get_all_locations
+from schemas import Location
+from supabase_client import get_all_locations
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/locations", tags=["locations"])
