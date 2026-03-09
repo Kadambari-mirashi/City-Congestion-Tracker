@@ -1,9 +1,9 @@
-# Deploy City Congestion Tracker backend and dashboard to Posit Connect.
+# Deploy Streamlit dashboard only to Cornell Posit Connect.
+# Backend is hosted on Render; set BACKEND_BASE_URL to your Render URL.
 # Triggers: push to main, or manual workflow_dispatch.
-# Requires GitHub secrets: CONNECT_SERVER, CONNECT_API_KEY.
-# Optional (add when ready): SUPABASE_URL, SUPABASE_KEY, OPENAI_API_KEY, BACKEND_BASE_URL.
+# Requires: CONNECT_SERVER, CONNECT_API_KEY, BACKEND_BASE_URL (Render backend URL).
 
-name: Deploy to Posit Connect
+name: Deploy Dashboard to Posit Connect
 
 on:
   push:
@@ -11,54 +11,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-backend:
-    name: Deploy Backend (FastAPI)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install rsconnect-python
-        run: pip install rsconnect-python
-
-      - name: Write backend .env
-        working-directory: backend
-        run: |
-          cat << 'ENVFILE' > .env
-          SUPABASE_URL=${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}
-          OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
-          OLLAMA_HOST=${{ secrets.OLLAMA_HOST }}
-          OLLAMA_API_KEY=${{ secrets.OLLAMA_API_KEY }}
-          OLLAMA_MODEL=${{ secrets.OLLAMA_MODEL }}
-          ENVFILE
-
-      - name: Deploy backend to Posit Connect
-        working-directory: backend
-        env:
-          CONNECT_SERVER: ${{ secrets.CONNECT_SERVER }}
-          CONNECT_API_KEY: ${{ secrets.CONNECT_API_KEY }}
-          CONNECT_BACKEND_APP_ID: ${{ secrets.CONNECT_BACKEND_APP_ID }}
-        run: |
-          EXTRA=""
-          if [ -n "$CONNECT_BACKEND_APP_ID" ]; then
-            EXTRA="--app-id $CONNECT_BACKEND_APP_ID"
-          fi
-          rsconnect deploy fastapi . \
-            --server "$CONNECT_SERVER" \
-            --api-key "$CONNECT_API_KEY" \
-            --entrypoint main:app \
-            --title "City Congestion Tracker API" \
-            $EXTRA
-
   deploy-dashboard:
     name: Deploy Dashboard (Streamlit)
     runs-on: ubuntu-latest
-    needs: deploy-backend
     steps:
       - uses: actions/checkout@v4
 
